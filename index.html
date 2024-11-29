@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home to Office Map</title>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqxCTZdxTax17MY9fHICCLfqJdjoODS6s&libraries=places"></script>
+  <style>
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script>
+    function initMap() {
+      const home = { lat: 24.879789464860007, lng: 121.2658900463753 };
+      const office = { lat: 24.955979616671335, lng: 121.16736966965546 };
+      
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 11,
+        center: home,
+      });
+
+      const directionsService = new google.maps.DirectionsService();
+      const directionsRenderer = new google.maps.DirectionsRenderer();
+      directionsRenderer.setMap(map);
+
+      directionsService.route(
+        {
+          origin: home,
+          destination: office,
+          travelMode: google.maps.TravelMode.DRIVING,
+        },
+        (response, status) => {
+          if (status === "OK") {
+            directionsRenderer.setDirections(response);
+            const route = response.routes[0].legs[0];
+            alert(`即時開車時間：${route.duration.text}`);
+          } else {
+            console.error("Directions request failed due to " + status);
+          }
+        }
+      );
+    }
+
+    window.onload = initMap;
+  </script>
+</body>
+</html>
